@@ -36,9 +36,9 @@ def calcDist(x1, x2):
     """
     return np.sqrt(np.sum(np.square(x1 - x2)))
     # 马哈顿距离计算公式
-    # return np.sum(x1 - x2)
+    # return np.abs(np.sum(x1 - x2))
 
-def getClosest(trainDataMat, trainLabelMat, x , topK):
+def getClosest(trainDataMat, trainLabelMat, x, topK):
     """
     预测样本x的标记
     获取方式通过找到与样本x最近的topK个点，并查看他们的标签。
@@ -51,18 +51,47 @@ def getClosest(trainDataMat, trainLabelMat, x , topK):
     """
     # 建立一个存放向量x与每个训练集中样本距离的列表
     # 列表的长度为训练集的长度，dataList[i]表示x与训练集中第i个样本的距离
-    distList = [0] * len(trainDataMat)
+    distList = [0] * len(trainLabelMat)
 
     for i in range(len(trainDataMat)):
-        x1 = trainLabelMat[i]
+        x1 = trainDataMat[i]
         curDist = calcDist(x1, x)
         distList[i] = curDist
 
-        topKList = np.argsort(np.array(distList))[:topK]
-        labelList = [0] * 10
+    topKList = np.agsort(np.array(distList))[:topK]
 
-        for index in topKList:
+    labelList = [0] * 10
 
-            labelList[int(trainLabelMat[index])] += 1
+    for index in topKList:
 
+        labelList[int(trainLabelMat[index])] += 1
 
+    return labelList.index(max(labelList))
+
+def model_test(trainDataArr, trainLabelArr, testDataArr, testLabelArr, topK):
+
+    print('start test')
+    trainDataMat = np.mat(trainDataArr); trainLabelMat = np.mat(trainLabelArr).T
+    testDataMat = np.mat(testDataArr); testLabelMat = np.mat(testLabelArr).T
+
+    errorCnt = 0
+    # for i in range(len(testDataMat)):
+    for i in range(200):
+        print('test %d:%d'%(i, 200))
+    #     print('test %d:%d' % (i, len(trainDataArr)))
+        x = testDataMat[i]
+        y = getClosest(trainDataMat, trainLabelMat, x, topK)
+
+        if y != testLabelMat[i]: errorCnt += 1
+
+    return 1 - (errorCnt / 200)
+    # return 1 - (errorCnt / len(testDataMat))
+
+if __name__ == "__main__":
+    start = time.time()
+    trainDataArr, trainLabelArr = loadData('/Users/leesennenjoyu/Words_Words/dataset/mnist_train.csv')
+    testDataArr, testLabelArr = loadData("/Users/leesennenjoyu/Words_Words/dataset/mnist_test.csv")
+    accur = model_test(trainDataArr, trainLabelArr, testDataArr, testLabelArr, 25)
+    print('accur is: %d'%(accur * 100), "%")
+    end = time.time()
+    print(end - start)
