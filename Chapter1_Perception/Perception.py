@@ -60,7 +60,7 @@ def perception(dataArr, labelArr, iter = 50):
     # np.shape(dataMat)的返回值为m，n -> np.shape(dataMat)[1])的值即为n，与
     # 样本长度保持一致
     w = np.zeros((1, np.shape(dataMat)[1]))
-    # 初始化偏置b为0
+ 	# 初始化偏置b为0
     b = 0
     # 初始化步长，也就是梯度下降过程中的n，控制梯度下降速率
     h = 0.0001

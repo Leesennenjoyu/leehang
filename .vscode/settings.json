@@ -1,4 +1,4 @@
 {
-    "python.pythonPath": "E:\\Anaconda\\python.exe",
+    "python.pythonPath": "/opt/anaconda3/envs/DeepLearning_py38/bin/python",
     "jupyter.jupyterServerType": "local"
 }
